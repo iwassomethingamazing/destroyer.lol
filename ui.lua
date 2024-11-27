@@ -4079,10 +4079,7 @@ do
                                                 Silent_Aim:List({Name = "Smoothness", Flag = "Smoothness Type Silent Aim", Options = {"Yes", "No"}, Default = "Yes", Callback = function(Option) if not TextBox1 then return end; if (Option == "No" and TextBox1) then TextBox1:SetVisible(false) else TextBox1:SetVisible(true) end end})
 						TextBox1 = Silent_Aim:Textbox({Name = "Smoothness", Flag = "Smoothness Number"})
 						Silent_Aim:Toggle({Name = "Use Closest Part", Flag = "Nearest Part", Callback = function(Bool) if (Multi_HitParts and Single_HitPart) then Multi_HitParts:SetVisible(Bool) Single_HitPart:SetVisible(not Bool) end  end})
-						Single_HitPart = Silent_Aim:List({Name = "Hit Box Selection", Flag = "Single Hit Part", Options = {"123"}, Default = "HumanoidRootPart"})
-						Silent_Aim:Toggle({Name = "Prefer body aim if lethal", Flag = "Silent Aim"})
-						Multi_HitParts = Silent_Aim:List({Name = "Hit Box Selection", Flag = "Closest Hit Part",Options = {"123"}, Default = {"HumanoidRootPart"}, Max = 9e9})
-						Multi_HitParts:SetVisible(false)
+						Single_HitPart = Silent_Aim:List({Name = "Hit Box Selection", Flag = "Single Hit Part", Options = {"Head", "UpperTorso", "HumanoidRootPart"}, Default = "HumanoidRootPart"})
 					end 
 					 
 					do -- Advanced
@@ -4123,9 +4120,9 @@ do
 					Aim_Assist:List({Name = "Smoothness", Flag = "Smoothness Type Aim Assist", Options = {"Yes", "No"}, Default = "Yes", Callback = function(Option) if not TextBox1 then return end; if (Option == "No" and TextBox1) then TextBox1:SetVisible(false) else TextBox1:SetVisible(true) end end})
 					TextBox1 = Aim_Assist:Textbox({Name = "Smoothness", Flag = "Smoothness Number"})
 					Aim_Assist:Toggle({Name = "Use Closest Part", Flag = "Nearest Part Aim Assist", Callback = function(Bool) if (Multi_HitParts and Single_HitPart) then Multi_HitParts:SetVisible(Bool) Single_HitPart:SetVisible(not Bool) end end})
-                                        Single_HitPart = Aim_Assist:List({Name = "Single Hit Part", Flag = "Aim Assist Single Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart"}, Default = "HumanoidRootPart"})
-                                        Multi_HitParts = Aim_Assist:List({Name = "Closest Hit Parts", Flag = "Aim Assist Closest Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart", "Penis"}, Default = {"HumanoidRootPart"}, Max = 9e9}); Multi_HitParts:SetVisible(false)
-                                        Aim_Assist:Slider({Name = "Stutter", Suffix = "ms", Min = 0, Max = 100, Default = 0, Flag = "Aim Assist Stutter"})
+                    Single_HitPart = Aim_Assist:List({Name = "Single Hit Part", Flag = "Aim Assist Single Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart"}, Default = "HumanoidRootPart"})
+                    Multi_HitParts = Aim_Assist:List({Name = "Closest Hit Parts", Flag = "Aim Assist Closest Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart", "Penis"}, Default = {"HumanoidRootPart"}, Max = 9e9}); Multi_HitParts:SetVisible(false)
+                    Aim_Assist:Slider({Name = "Stutter", Suffix = "ms", Min = 0, Max = 100, Default = 0, Flag = "Aim Assist Stutter"})
 
 				end 
 
@@ -4136,9 +4133,9 @@ do
 					Advanced:Toggle({Name = "Jump Offset", Flag = "Jump Offset Aim Assist", Callback = function(Bool) if (Jump_Prediction) then Jump_Prediction:SetVisible(Bool) end end})
 					Jump_Prediction = Advanced:Textbox({Name = "Offset Value", Flag = "Manual Offset Value Aim Assist", Placeholder = "Jump Offset"}); Jump_Prediction:SetVisible(false)
 					Advanced:Toggle({Name = "Target Prioritization", Flag = "Enable Prioritization", Callback = function(Bool) if (Priority_Settings) then Priority_Settings:SetVisible(Bool) end end})
-                                        Priority_Settings = Advanced:List({Name = "Prioritize", Flag = "Prioritization Settings", Options = {"Closest Distance", "Closest Angle", "Lowest Health", "Highest Health"}, Default = "Closest Distance"}); Priority_Settings:SetVisible(false)
+                    Priority_Settings = Advanced:List({Name = "Prioritize", Flag = "Prioritization Settings", Options = {"Closest Distance", "Closest Angle", "Lowest Health", "Highest Health"}, Default = "Closest Distance"}); Priority_Settings:SetVisible(false)
 					Advanced:Toggle({Name = "Dynamic Hit-Part", Flag = "Dynamic Hit Part Aim Assist", Callback = function(Bool) if (Dynamic_HitPart) then Dynamic_HitPart:SetVisible(Bool) end end})
-                                        Dynamic_HitPart = Advanced:List({Name = "Dynamic Hit-Part Options", Flag = "Dynamic Hit Part Options", Options = {"Random", "Cycle", "Closest"}, Default = "Closest"}); Dynamic_HitPart:SetVisible(false)
+                    Dynamic_HitPart = Advanced:List({Name = "Dynamic Hit-Part Options", Flag = "Dynamic Hit Part Options", Options = {"Random", "Cycle", "Closest"}, Default = "Closest"}); Dynamic_HitPart:SetVisible(false)
 					Advanced:Toggle({Name = "Air Part", Flag = "Air Part Aim Assist", Callback = function(Bool) if (Air_Part) then Air_Part:SetVisible(Bool) end end})
 					Air_Part = Advanced:List({Name = "Air Hit-Part", Flag = "Air Hit Part", Options = {"Head", "HumanoidRootPart", "UpperTorso"}, Default = "RightFoot"}) Air_Part:SetVisible(false)
 				end 
@@ -4146,15 +4143,16 @@ do
 			 
 			do -- Resolver
 				local Resolver = Pages["Aiming"]:Section({Name = "Resolver", Zindex = 9999, Side = "Right"}) 	
-				Resolver:Toggle({Name = "Resolver", Flag = "Resolver"})
+				Resolver:Toggle({Name = "Resolver", Flag = "Resolver"}):Keybind({Name = "Resolver", Flag = "Resolver Key", Mode = "Toggle"})
+                Resolver:List({Name = "Resolver Type", Flag = "Resolver Type", Options = {"MoveDirection", "Recalculate"}, Default = "Recalculate"})
 			end 
 			 
 			do -- Checks
-				local Checks = Pages["Aiming"]:Section({Name = "Checks", Side = "Right"}) 	
-				Checks:List({Name = "Checks", Flag = "Checks", Options = {"Knocked", "Wall", "Friend", "Grabbed", "ForceField"}, Max = 3})
+				local Checks = Pages["Aiming"]:Section({Name = "Checks", Side = "Left"}) 	
+				Checks:List({Name = "Checks", Flag = "Checks", Options = {"Knocked", "Wall", "Friend", "Grabbed", "ForceField", "Antilock"}, Max = 3})
 			end 		
 		end 
-	end 	
+	end 
 	 
 	do -- Rage 
 		local Deysnc, Desync_Settings, Desync_Visualize = Pages["Rage"]:MultiSection({Sections = {"Spoofer", "Settings", "Visualize"}, Zindex = 5}) do  
