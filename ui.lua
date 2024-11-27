@@ -4076,7 +4076,7 @@ do
 						Delay = Silent_Aim:Slider({Name = "Delay", Suffix = "ms", Flag = "Auto Select Delay", Min = 0, Max = 1000, Default = 100}); Delay:SetVisible(false)
 						Silent_Aim:List({Name = "Prediction Type", Flag = "Prediction Type Silent Aim", Options = {"Auto", "Manual"}, Default = "Manual", Callback = function(Option) if not TextBox then return end; if (Option == "Auto" and TextBox) then TextBox:SetVisible(false) else TextBox:SetVisible(true) end end})
 						TextBox = Silent_Aim:Textbox({Name = "Prediction", Flag = "Manual Prediction"})
-                        Silent_Aim:List({Name = "Smoothness", Flag = "Smoothness Type Silent Aim", Options = {"Yes", "No"}, Default = "Yes", Callback = function(Option) if not TextBox1 then return end; if (Option == "No" and TextBox1) then TextBox1:SetVisible(false) else TextBox1:SetVisible(true) end end})
+                                                Silent_Aim:List({Name = "Smoothness", Flag = "Smoothness Type Silent Aim", Options = {"Yes", "No"}, Default = "Yes", Callback = function(Option) if not TextBox1 then return end; if (Option == "No" and TextBox1) then TextBox1:SetVisible(false) else TextBox1:SetVisible(true) end end})
 						TextBox1 = Silent_Aim:Textbox({Name = "Smoothness", Flag = "Smoothness Number"})
 						Silent_Aim:Toggle({Name = "Use Closest Part", Flag = "Nearest Part", Callback = function(Bool) if (Multi_HitParts and Single_HitPart) then Multi_HitParts:SetVisible(Bool) Single_HitPart:SetVisible(not Bool) end  end})
 						Single_HitPart = Silent_Aim:List({Name = "Hit Box Selection", Flag = "Single Hit Part", Options = {"123"}, Default = "HumanoidRootPart"})
@@ -4117,24 +4117,30 @@ do
 				local Aim_Assist, Advanced = Pages["Aiming"]:MultiSection({Sections = {"Aim Assist", "Advanced"}, Side = "Right"})
 				-- Aim Assist
 				do 
-					Aim_Assist:Toggle({Name = "Enabled", Flag = "Aim Assist Enabled"})
-					Aim_Assist:List({Name = "Prediction Type", Flag = "Prediction Type", Options = {"Auto", "Manual"}, Default = "Manual", Callback = function(Option) if not TextBox then return end; if (Option == "Auto" and TextBox) then TextBox:SetVisible(false) else TextBox:SetVisible(true) end  end})
-					Aim_Assist:Textbox({Name = "Prediction", Flag = "Manual Prediction Aim Assist"})
+					Aim_Assist:Toggle({Name = "Enabled", Flag = "Aim Assist Enabled"}):Keybind({Name = "Aim Assist", Flag = "AimAssist Key", Mode = "Toggle"})
+					Aim_Assist:List({Name = "Prediction Type", Flag = "Prediction Type Aim Assist", Options = {"Auto", "Manual"}, Default = "Manual", Callback = function(Option) if not TextBox then return end; if (Option == "Auto" and TextBox) then TextBox:SetVisible(false) else TextBox:SetVisible(true) end end})
+					TextBox = Aim_Assist:Textbox({Name = "Prediction", Flag = "Manual Prediction"})
+					Aim_Assist:List({Name = "Smoothness", Flag = "Smoothness Type Aim Assist", Options = {"Yes", "No"}, Default = "Yes", Callback = function(Option) if not TextBox1 then return end; if (Option == "No" and TextBox1) then TextBox1:SetVisible(false) else TextBox1:SetVisible(true) end end})
+					TextBox1 = Aim_Assist:Textbox({Name = "Smoothness", Flag = "Smoothness Number"})
 					Aim_Assist:Toggle({Name = "Use Closest Part", Flag = "Nearest Part Aim Assist", Callback = function(Bool) if (Multi_HitParts and Single_HitPart) then Multi_HitParts:SetVisible(Bool) Single_HitPart:SetVisible(not Bool) end end})
-					Single_HitPart = Aim_Assist:List({Name = "Hit-Part", Flag = "Aim Assist Single Hit Part", Options = {"123"}, Default = "HumanoidRootPart"})
-					Multi_HitParts = Aim_Assist:List({Name = "Closest Hit Part", Flag = "Aim Assist Closest Hit Part", Options = {"123"}, Default = {"HumanoidRootPart"}, Max = 9e9}); Multi_HitParts:SetVisible(false)
-					Aim_Assist:Slider({Name = "Stutter", Suffix = "ms", Min = 0, Max = 100, Default = 0, Flag = "Aim Assist Stutter"})
+                                        Single_HitPart = Aim_Assist:List({Name = "Single Hit Part", Flag = "Aim Assist Single Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart"}, Default = "HumanoidRootPart"})
+                                        Multi_HitParts = Aim_Assist:List({Name = "Closest Hit Parts", Flag = "Aim Assist Closest Hit Part", Options = {"Head", "UpperTorso", "LowerTorso", "HumanoidRootPart", "Penis"}, Default = {"HumanoidRootPart"}, Max = 9e9}); Multi_HitParts:SetVisible(false)
+                                        Aim_Assist:Slider({Name = "Stutter", Suffix = "ms", Min = 0, Max = 100, Default = 0, Flag = "Aim Assist Stutter"})
+
 				end 
 
 				do -- Advanced
 					Advanced:Toggle({Name = "Use Mouse", Flag = "Use Mouse", Callback = function(Bool) if (Mouse_1 and Mouse_2 and Camera) then Mouse_1:SetVisible(Bool) Mouse_2:SetVisible(Bool) Camera:SetVisible(not Bool) end end}) 
 					Mouse_1 = Advanced:Slider({Name = "Horizontal Smoothing", Suffix = "%", Min = 1, Max = 100, Default = 1, Flag = "Horizontal Smoothing"}); Mouse_1:SetVisible(false)
 					Mouse_2 = Advanced:Slider({Name = "Vertical Smoothing", Suffix = "%", Min = 1, Max = 100, Default = 1, Flag = "Vertical Smoothing"}); Mouse_2:SetVisible(false)
-					Camera = Advanced:Slider({Name = "Smoothing", Suffix = "%", Min = 1, Max = 100, Default = 1, Flag = "Smoothing"})
 					Advanced:Toggle({Name = "Jump Offset", Flag = "Jump Offset Aim Assist", Callback = function(Bool) if (Jump_Prediction) then Jump_Prediction:SetVisible(Bool) end end})
 					Jump_Prediction = Advanced:Textbox({Name = "Offset Value", Flag = "Manual Offset Value Aim Assist", Placeholder = "Jump Offset"}); Jump_Prediction:SetVisible(false)
+					Advanced:Toggle({Name = "Target Prioritization", Flag = "Enable Prioritization", Callback = function(Bool) if (Priority_Settings) then Priority_Settings:SetVisible(Bool) end end})
+                                        Priority_Settings = Advanced:List({Name = "Prioritize", Flag = "Prioritization Settings", Options = {"Closest Distance", "Closest Angle", "Lowest Health", "Highest Health"}, Default = "Closest Distance"}); Priority_Settings:SetVisible(false)
+					Advanced:Toggle({Name = "Dynamic Hit-Part", Flag = "Dynamic Hit Part Aim Assist", Callback = function(Bool) if (Dynamic_HitPart) then Dynamic_HitPart:SetVisible(Bool) end end})
+                                        Dynamic_HitPart = Advanced:List({Name = "Dynamic Hit-Part Options", Flag = "Dynamic Hit Part Options", Options = {"Random", "Cycle", "Closest"}, Default = "Closest"}); Dynamic_HitPart:SetVisible(false)
 					Advanced:Toggle({Name = "Air Part", Flag = "Air Part Aim Assist", Callback = function(Bool) if (Air_Part) then Air_Part:SetVisible(Bool) end end})
-					Air_Part = Advanced:List({Name = "Air Hit-Part", Flag = "Air Hit Part", Options = {"123"}, Default = "RightFoot"}) Air_Part:SetVisible(false)
+					Air_Part = Advanced:List({Name = "Air Hit-Part", Flag = "Air Hit Part", Options = {"Head", "HumanoidRootPart", "UpperTorso"}, Default = "RightFoot"}) Air_Part:SetVisible(false)
 				end 
 			end 	
 			 
